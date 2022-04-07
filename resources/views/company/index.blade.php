@@ -10,7 +10,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="float-right">
-                                    <a class="btn btn-success" href="{{ route('companies.create') }}"> Create</a>
+                                    <a class="btn btn-success" href="{{ route('companies.create') }}" style="margin-bottom:5px;float: right; "> Create</a>
                                 </div>
                             </div>
                         </div>
@@ -26,6 +26,7 @@
                                 <th scope="col">No</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Website</th>
+                                <th scope="col">Logo</th>
                                 <th width="280px" scope="col">Action</th>
                             </tr>
                             @foreach ($companies as $company)
@@ -33,6 +34,7 @@
                                     <td>{{ $company->id }}</td>
                                     <td>{{ $company->name }}</td>
                                     <td>{{ $company->website }}</td>
+                                    <td><img src="{{ asset('storage/logos/'.$company->logo_url) }}" alt="" style="width:50px;height:50px;"> </td>
                                     <td>
                                         <form action="{{ route('companies.destroy',$company->id) }}" method="POST">
                                             <a class="btn btn-primary" href="{{ route('companies.edit',$company->id) }}">Edit</a>
@@ -47,7 +49,10 @@
                             @endforeach
                         </table>
 
-                        {!! $companies->links() !!}
+                        {{-- Pagination --}}
+                        <div class="d-flex justify-content-center">
+                            {!! $companies->links() !!}
+                        </div>
                     </div>
                 </div>
             </div>

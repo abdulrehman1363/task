@@ -6,6 +6,7 @@ class File
 {
     public static function storeFile($logo)
     {
-        return $logo->storeAs('logos', $logo->getClientOriginalName());
+        $logo->storeAs('public/logos', $logo->getClientOriginalName());
+        return $logo->getClientOriginalName();
     }
 }

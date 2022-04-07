@@ -10,10 +10,6 @@ use Illuminate\Http\Request;
 class CompanyController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -21,8 +17,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::latest()->paginate(5);
-        return view('company.show',compact('companies'));
+        $companies = Company::latest()->paginate(10);
+        return view('company.index', compact('companies'));
     }
 
     /**
@@ -38,62 +34,68 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreCompany $request)
     {
-        $param = $request->all();
-        $logo = File::storeFile($request->logo);
-        //dd($param);
-        unset($param['logo']);
-        $param['logo'] = $logo;
-
-        Company::create($param);
+        Company::create($request->validated()+[
+                'logo_url' => File::storeFile($request->logo)
+            ]);
+        return redirect()->route('companies.index')
+            ->with('success','Company Created successfully');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+        $company = Company::find($id);
+        return view('company.edit',compact('company'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreCompany $request, Company $company)
     {
-        //
+        $company->update($request->validated()+[
+                'logo_url' => File::storeFile($request->logo)
+            ]);
+        return redirect()->route('companies.index')
+            ->with('success','Company Updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Company $company)
     {
-        //
+        $company->delete();
+        return redirect()->route('companies.index')
+            ->with('success','Company deleted successfully');
     }
 }

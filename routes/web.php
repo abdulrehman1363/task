@@ -14,14 +14,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('employees.index');
 });
 
 Auth::routes(['register' => false]);
 
+Route::middleware('auth')->group(function () {
+
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::resource('companies', \App\Http\Controllers\CompanyController::class);
+    Route::resource('employees', \App\Http\Controllers\EmployeeController::class);
+});
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('companies', \App\Http\Controllers\CompanyController::class);
-Route::resource('employees', \App\Http\Controllers\EmployeeController::class);
+
 

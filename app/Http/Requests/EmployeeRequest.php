@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCompany extends FormRequest
+class EmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,17 +24,11 @@ class StoreCompany extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'website' => 'required',
-            'logo' => 'required|file|dimensions:min_width=100,min_height=100'
+            'first_name' => 'string|required',
+            'last_name' => 'string|required',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'company_id' => 'required'
         ];
-    }
-
-    public function prepareForValidation()
-    {
-        $this->merge([
-            'name' => $this->company_name,
-            'website' => $this->company_website
-        ]);
     }
 }
